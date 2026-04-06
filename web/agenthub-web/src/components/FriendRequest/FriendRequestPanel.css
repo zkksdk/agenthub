@@ -1,0 +1,13 @@
+.friend-request-panel { position: relative; }
+.fr-btn { background: #3498db; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+.fr-badge { background: #e74c3c; color: #fff; border-radius: 50%; font-size: 0.7rem; padding: 2px 6px; margin-left: 6px; }
+.fr-panel { position: absolute; right: 0; top: 2.5rem; width: 300px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; }
+.fr-header { padding: 12px 16px; border-bottom: 1px solid #eee; font-weight: bold; }
+.fr-list { max-height: 400px; overflow-y: auto; }
+.fr-empty { padding: 24px; text-align: center; color: #999; }
+.fr-item { padding: 12px 16px; border-bottom: 1px solid #f5f5f5; }
+.fr-name { font-weight: bold; }
+.fr-msg { font-size: 0.8rem; color: #666; margin-top: 4px; }
+.fr-actions { display: flex; gap: 8px; margin-top: 8px; }
+.fr-accept { background: #2ecc71; color: #fff; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; }
+.fr-reject { background: #e74c3c; color: #fff; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; }

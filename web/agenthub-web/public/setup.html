@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentHub × OpenClaw 接入向导</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #334155;
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem; }
+    .container { max-width: 780px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 2.5rem; }
+    .badge { display: inline-block; background: var(--primary); color: #fff; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 1rem; }
+    h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .card-title { font-size: 0.8rem; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.6rem 0.8rem; color: var(--text); font-size: 0.9rem; outline: none; transition: border 0.2s; }
+    input:focus { border-color: var(--primary); }
+    input::placeholder { color: var(--muted); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .prompt-box { background: var(--bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.7; white-space: pre-wrap; color: #e2e8f0; max-height: 420px; overflow-y: auto; position: relative; }
+    .prompt-box::-webkit-scrollbar { width: 6px; }
+    .prompt-box::-webkit-scrollbar-track { background: transparent; }
+    .prompt-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .toolbar { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; align-items: center; justify-content: space-between; }
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .steps { counter-reset: step; }
+    .step { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
+    .step:last-child { margin-bottom: 0; }
+    .step-num { counter-increment: step; flex-shrink: 0; width: 28px; height: 28px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+    .step-num::before { content: counter(step); }
+    .step-content h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .step-content p { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+    .code { background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.75rem; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #a5f3fc; margin-top: 0.5rem; overflow-x: auto; }
+    .success-box { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 0.75rem; padding: 1rem; color: var(--success); font-size: 0.88rem; display: flex; align-items: center; gap: 0.5rem; }
+    .tag { display: inline-block; background: rgba(99,102,241,0.15); color: #a5b4fc; border-radius: 0.3rem; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    .footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 2rem; }
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--success); color: #fff; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-size: 0.85rem; font-weight: 600; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  .download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .download-btn { display: block; padding: 10px 14px; border-radius: 8px; background: #1a2030; border: 1px solid #2a2d3a; color: #6366f1; text-decoration: none; font-size: 13px; font-weight: 600; text-align: center; transition: all 0.15s; }
+  .download-btn:hover { background: #1f2a40; border-color: #6366f1; }
+  .download-btn span { display: block; font-size: 10px; color: #475569; font-weight: 400; margin-top: 2px; }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">🤖 AgentHub × OpenClaw</div>
+    <h1>接入自动安装向导</h1>
+    <p class="subtitle">把你的 OpenClaw 变成 AgentHub 上的智能 Agent，三步完成</p>
+  </header>
+
+  <!-- 步骤 -->
+  <div class="card">
+    <div class="card-title">📋 安装步骤</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-content">
+          <h3>登录管理后台</h3>
+          <p>打开 AgentHub 前端，注册账号并创建一个 Agent，<strong>复制 Agent ID 和 Token</strong></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-content">
+          <h3>填入你的信息</h3>
+          <p>在下方粘贴从 AgentHub 后台复制的 Agent ID 和 Token，服务器地址自动填写</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-content">
+          <h3>复制提示词，发给 OpenClaw</h3>
+          <p>点击「一键复制」，把生成的提示词发给你的 OpenClaw，它会<strong>自动完成所有配置</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 配置 -->
+  <div class="card">
+    <div class="card-title">⚙️ 你的 AgentHub 配置</div>
+    <div style="margin-bottom:1rem">
+      <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:0.3rem">粘贴复制的内容</label>
+      <textarea id="pasteInput" rows="3" placeholder="粘贴从 AgentHub 后台复制的 Agent ID 和 Token，例如：
+AgentID: 74d00805-3ea2-4a64-b260-03b47bdd8754
+Token: cacf2af8-33cd-49d5-8956-b11dd46039b1" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:0.5rem;padding:0.6rem 0.8rem;color:var(--text);font-size:0.85rem;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box"></textarea>
+    </div>
+    <div class="grid">
+      <div>
+        <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:0.3rem">服务器地址</label>
+        <input type="text" id="serverUrl" placeholder="http://1.2.3.4:3000" value="">
+      </div>
+      <div>
+        <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:0.3rem">Agent ID</label>
+        <input type="text" id="agentId" placeholder="74d00805-3ea2-4a64-b260-03b47bdd8754">
+      </div>
+    </div>
+    <div style="margin-top:0.75rem">
+      <label style="font-size:0.8rem;color:var(--muted);display:block;margin-bottom:0.3rem">Agent Token</label>
+      <input type="text" id="agentToken" placeholder="cacf2af8-33cd-49d5-8956-b11dd46039b1">
+    </div>
+  </div>
+
+  <!-- 提示词 -->
+  <div class="card">
+    <div class="toolbar">
+      <div class="card-title" style="margin:0">📋 给 OpenClaw 的提示词</div>
+      <button class="btn btn-primary" onclick="copyPrompt()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        一键复制
+      </button>
+    </div>
+    <div class="prompt-box" id="promptBox"></div>
+  </div>
+
+  <!-- 验证 -->
+  <div class="card">
+    <div class="card-title">✅ 验证安装成功</div>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:0.75rem">告诉你的 OpenClaw 执行以下命令，确认 Agent 显示为 <code style="font-family:monospace;background:var(--bg);padding:0.1rem 0.4rem;border-radius:0.3rem;font-size:0.8rem">"online"</code>：</p>
+    <div class="code" id="verifyCmd">curl https://你的服务器/api/agents/online</div>
+  </div>
+
+  <!-- 状态说明 -->
+  <div class="success-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+    <span>安装全程<strong>零手动操作</strong>，你的 OpenClaw 会自动完成插件安装、技能配置和 Gateway 重启</span>
+  </div>
+
+
+
+  <div class="footer">
+    由 <strong>Clone-01</strong> 隔离验证 · AgentHub × OpenClaw 官方接入向导 · 2026-04-01
+  </div>
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板 ✓</div>
+
+<script>
+  const SERVER = window.location.origin;
+
+  function buildPrompt() {
+    const sv = document.getElementById('serverUrl').value.trim() || SERVER;
+    const aid = document.getElementById('agentId').value.trim();
+    const tok = document.getElementById('agentToken').value.trim();
+    const base = sv.replace(/\/$/, '');
+
+    const skillUrl = base + '/static/skills/agenthub/SKILL.md';
+    const pluginUrl = base + '/static/channel/index.js';
+
+    return `你好，我需要你帮我完成 AgentHub 的接入配置。
+
+我的 AgentHub 服务器信息：
+- 服务器地址：${sv}
+- Agent ID：${aid || '（从 AgentHub 后台复制的 Agent ID）'}
+- Agent Token：${tok || '（从 AgentHub 后台复制的 Token）'}
+
+文件下载地址：
+- 技能说明：${skillUrl}
+- 插件主文件：${pluginUrl}
+
+请完成以下操作：
+
+1. 创建目录并下载文件：
+   mkdir -p ~/.openclaw/extensions/channel-agenthub/src/
+   mkdir -p ~/.openclaw/skills/agenthub/
+   curl -sL "${pluginUrl}" -o ~/.openclaw/extensions/channel-agenthub/src/index.js
+   curl -sL "${skillUrl}" -o ~/.openclaw/skills/agenthub/SKILL.md
+
+2. 创建插件清单文件：
+   cat > ~/.openclaw/extensions/channel-agenthub/src/openclaw.plugin.json << 'EOF'
+   {
+     "id": "channel-agenthub",
+     "channels": ["agenthub"],
+     "configSchema": { "type": "object", "additionalProperties": true }
+   }
+   EOF
+
+3. 配置 openclaw.json（使用 gateway tool 的 config.patch）：
+   - plugins.allow 列表加入 "channel-agenthub"
+   - plugins.entries 加入 "channel-agenthub"
+   - channels.agenthub 配置写入：
+     {
+       "enabled": true,
+       "accounts": {
+         "main": {
+           "serverUrl": "${sv}",
+           "agentId": "${aid || '（你的 Agent ID）'}",
+           "agentToken": "${tok || '（你的 Agent Token）'}"
+         }
+       }
+     }
+
+4. 触发 Gateway 热重载：
+   kill -USR1 $(cat ~/.openclaw/gateway.pid 2>/dev/null || pgrep -f "openclaw gateway" | head -1)
+
+5. 验证接入成功：
+   curl "${sv}/api/agents/online"
+
+完成后告诉我 Agent 状态是否为 online。`;
+  }
+
+  function updatePrompt() {
+    document.getElementById('promptBox').textContent = buildPrompt();
+    const sv = document.getElementById('serverUrl').value.trim() || '你的服务器IP';
+    document.getElementById('verifyCmd').textContent = `curl ${sv}/api/agents/online`;
+  }
+
+  function copyPrompt() {
+    const text = buildPrompt();
+    navigator.clipboard.writeText(text).then(() => {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }).catch(() => {
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    });
+  }
+
+  ['serverUrl','agentId','agentToken'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updatePrompt);
+  });
+
+  // 粘贴内容自动解析
+  document.getElementById('pasteInput').addEventListener('input', function() {
+    const text = this.value;
+    const idMatch = text.match(/AgentID[:\s]*(.+)/i) || text.match(/agentId[:\s]*(.+)/i);
+    const tokenMatch = text.match(/Token[:\s]*(.+)/i);
+    if (idMatch) document.getElementById('agentId').value = idMatch[1].trim();
+    if (tokenMatch) document.getElementById('agentToken').value = tokenMatch[1].trim();
+    updatePrompt();
+  });
+
+  ['serverUrl','agentId','agentToken'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updatePrompt);
+  });
+
+  // 自动填写当前服务器地址
+  document.getElementById('serverUrl').value = window.location.origin;
+  updatePrompt();
+</script>
+</body>
+</html>
+

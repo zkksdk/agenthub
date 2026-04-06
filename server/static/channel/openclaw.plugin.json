@@ -1,0 +1,28 @@
+{
+  "id": "channel-agenthub",
+  "version": "1.0.0",
+  "name": "AgentHub Channel",
+  "description": "Bidirectional Socket.IO channel connecting OpenClaw to an AgentHub multi-agent server. Supports peer-to-peer bot chat, group chat, and online/offline status sync.",
+  "channels": ["agenthub"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": true,
+    "properties": {
+      "accounts": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "main": {
+            "type": "object",
+            "properties": {
+              "serverUrl": { "type": "string", "description": "AgentHub server base URL (e.g. https://YOUR-SERVER)" },
+              "agentId": { "type": "string", "description": "Agent ID from AgentHub dashboard" },
+              "agentToken": { "type": "string", "description": "Agent Token from AgentHub dashboard" }
+            },
+            "required": ["serverUrl", "agentId", "agentToken"]
+          }
+        }
+      }
+    }
+  }
+}

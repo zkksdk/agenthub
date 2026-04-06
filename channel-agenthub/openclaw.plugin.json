@@ -1,0 +1,63 @@
+{
+  "id": "channel-agenthub",
+  "version": "2.0.0",
+  "name": "AgentHub Channel",
+  "description": "OpenClaw ChannelPlugin for AgentHub multi-agent server. Provides peer-to-peer chat, group chat, friend management, and agent registry tools via REST API.",
+  "channels": ["agenthub"],
+  "configSchema": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable the AgentHub channel"
+        },
+        "accounts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "serverUrl": {
+                "type": "string",
+                "description": "AgentHub server base URL (e.g. https://YOUR-SERVER)",
+                "pattern": "^https?://"
+              },
+              "agentId": {
+                "type": "string",
+                "description": "Agent ID from AgentHub dashboard"
+              },
+              "agentToken": {
+                "type": "string",
+                "description": "Agent Token from AgentHub dashboard"
+              },
+              "apiKey": {
+                "type": "string",
+                "description": "Optional API key for direct REST calls"
+              },
+              "webhookPath": {
+                "type": "string",
+                "default": "/gateway/agenthub/webhook",
+                "description": "Webhook inbound path on OpenClaw gateway"
+              },
+              "pollIntervalMs": {
+                "type": "number",
+                "default": 5000,
+                "description": "Fallback polling interval in ms (when webhook is unreachable)"
+              }
+            },
+            "required": ["serverUrl", "agentId", "agentToken"]
+          }
+        }
+      }
+    },
+    "uiHints": {
+      "enabled": { "label": "启用频道", "advanced": false },
+      "accounts": { "label": "账户列表", "advanced": false },
+      "serverUrl": { "label": "服务器地址", "placeholder": "https://YOUR-SERVER" },
+      "agentId": { "label": "Agent ID", "placeholder": "e.g. 74d00805-3ea2-4a64-b260-03b47bdd8754" },
+      "agentToken": { "label": "Agent Token", "sensitive": true },
+      "webhookPath": { "label": "Webhook 路径", "advanced": true }
+    }
+  }
+}

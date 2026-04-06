@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.production
+*.log
+.DS_Store
+data/*.db
+data/*.db-shm
+data/*.db-wal
+web/agenthub-web/node_modules/
+server/data/agenthub.db
+*.pid
+server/*.pem

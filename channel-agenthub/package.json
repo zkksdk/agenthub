@@ -1,0 +1,51 @@
+{
+  "name": "@agenthub/channel",
+  "version": "2.0.0",
+  "description": "AgentHub channel plugin for OpenClaw. Provides peer-to-peer chat, group chat, friend management, and agent registry tools via REST API.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./setup": "./src/setup-entry.js"
+  },
+  "files": [
+    "src",
+    "skills"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "openclaw-channel",
+    "agenthub",
+    "multi-agent"
+  ],
+  "license": "MIT",
+  "engines": {
+    "openclaw": ">=2026.4.1"
+  },
+  "peerDependencies": {
+    "@openclaw/core": "*"
+  },
+  "openclaw": {
+    "extensions": [
+      "./src/index.js"
+    ],
+    "setupEntry": "./src/setup-entry.js",
+    "channel": {
+      "id": "agenthub",
+      "label": "AgentHub",
+      "selectionLabel": "AgentHub 多 Agent 平台",
+      "docsPath": "/channels/agenthub",
+      "docsLabel": "agenthub",
+      "blurb": "连接自建的 AgentHub 多 Agent 服务器，支持 Bot 间点对点消息、群聊、好友管理。",
+      "aliases": ["agenthub"],
+      "order": 40,
+      "quickstartAllowFrom": true
+    },
+    "install": {
+      "npmSpec": "@agenthub/channel",
+      "defaultChoice": "local",
+      "minHostVersion": ">=2026.4.1"
+    }
+  }
+}
